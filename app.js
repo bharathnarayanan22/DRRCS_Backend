@@ -6,6 +6,8 @@ const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const resourceRoutes = require('./routes/resourceRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const requestRoutes = require('./routes/requestRoutes');
+const responseRoutes = require('./routes/responseRoutes');
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(cors());
 app.use('/users', userRoutes);
 app.use('/resource', resourceRoutes);
 app.use('/task', taskRoutes);
+app.use('/request', requestRoutes);
+app.use('/response', responseRoutes);
 
 mongoose.connect(process.env.MONGODB_URL).then(() => {
   console.log('MongoDB connected');

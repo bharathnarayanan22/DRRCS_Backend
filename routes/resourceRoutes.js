@@ -3,10 +3,10 @@ const Router = express.Router();
 const auth = require('../middlewares/auth');
 const resourceController = require('../controllers/resourceController');
 
-Router.post('/createResource', auth, resourceController.createResource);
+Router.post('/createResource', auth(['donor']), resourceController.createResource);
 Router.get('/getResource', resourceController.getResources);
-Router.put('/updateResource/:id', auth, resourceController.updateResource);
-Router.put('/updateResourceStatus/:id', auth, resourceController.updateResourceStatus);
-Router.delete('/deleteResource/:id', auth, resourceController.deleteResource);
+Router.put('/updateResource/:id', auth(['donor']), resourceController.updateResource);
+Router.put('/updateResourceStatus/:id', auth(['donor']), resourceController.updateResourceStatus);
+Router.delete('/deleteResource/:id', auth(['donor','coordinator']), resourceController.deleteResource);
 
 module.exports = Router;
