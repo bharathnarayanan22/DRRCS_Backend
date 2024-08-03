@@ -7,6 +7,6 @@ Router.post('/createTask', auth(['coordinator']), createTask);
 Router.get('/getTask', getTasks);
 Router.put('/acceptTask/:id', auth(['volunteer']), acceptTask)
 // Router.put('/updateTask/:id', auth, updateTask);
-Router.put('/updateTaskStatus/:id', auth(['coordinator', 'volunteeer']), updateTaskStatus);
+Router.put('/updateTaskStatus/:id', auth(['coordinator','volunteer']), updateTaskStatus);
 
 module.exports = Router;

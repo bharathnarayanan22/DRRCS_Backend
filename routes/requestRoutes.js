@@ -9,6 +9,4 @@ Router.post('/createRequest', auth(['coordinator']), requestController.createReq
 
 Router.get('/getRequests', requestController.getRequests);
 
-
-
 module.exports = Router;
