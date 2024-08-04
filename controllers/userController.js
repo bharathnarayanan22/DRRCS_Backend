@@ -50,4 +50,25 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const getVolunteers = async (req, res) => {
+  try {
+    const volunteers = await User.find({ role: 'volunteer' }).select('-password');
+    res.json(volunteers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+const getDonors = async (req, res) => {
+  try {
+    const donors = await User.find({ role: 'donor' }).select('-password');
+    res.json(donors);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = { register, login, getVolunteers, getDonors };
