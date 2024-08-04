@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['volunteer', 'donor', 'coordinator'], required: true },
   //skills: { type: [String], default: [] },
-  availability: { type: String, default: '' },
+  //availability: { type: String, default: '' },
 });
 
 userSchema.pre('save', async function (next) {   //pre act as middleware
