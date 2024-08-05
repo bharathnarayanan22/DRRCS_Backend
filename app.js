@@ -12,7 +12,7 @@ const responseRoutes = require('./routes/responseRoutes');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyparser.json());
 app.use(express.json());
