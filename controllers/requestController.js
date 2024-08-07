@@ -50,4 +50,28 @@ const respondToRequest = async (req, res) => {
   }
 };
 
-module.exports = { createRequest, getRequests, respondToRequest };
+const getRequestResponses = async (req, res) => {
+  const { requestId } = req.params;
+
+  try {
+    const request = await Request.findById(requestId).populate({
+      path: 'responses',
+      populate: [
+        { path: 'donor', select: ['name', 'email'] },
+        { path: 'resource', select: ['type'] }
+      ]
+    });
+
+    if (!request) {
+      return res.status(404).json({ message: 'Request not found' });
+    }
+
+    res.json(request.responses);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+module.exports = { createRequest, getRequests, respondToRequest, getRequestResponses };
+
