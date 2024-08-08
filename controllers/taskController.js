@@ -184,3 +184,14 @@ exports.createTaskFromRequest = async (req, res) => {
   }
 };
 
+exports.getAcceptedTasks = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const tasks = await Task.find({ "volunteers.user": userId, "volunteers.status": 'accepted' });
+    res.json(tasks);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
