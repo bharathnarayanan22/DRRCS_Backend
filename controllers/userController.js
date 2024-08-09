@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const Task = require('../models/taskModel');
+const Response = require('../models/responseModel');
 
 const register = async (req, res) => {
   const { name, email, password, role } = req.body;
@@ -97,6 +99,27 @@ const getVolunteersAndDonors = async (req, res) => {
   }
 };
 
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate('tasks') // Populating tasks
+      .populate({
+        path: 'responses',  // Populating responses
+        populate: {
+          path: 'task',      // Also populating the task field inside each response
+          model: 'Task'
+        }
+      });
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-module.exports = { register, login, getVolunteers, getDonors, getVolunteersAndDonors,getUserRole};
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Error fetching user profile' });
+  }
+};
+
+module.exports = { register, login, getVolunteers, getDonors, getVolunteersAndDonors, getUserRole, getUserProfile };

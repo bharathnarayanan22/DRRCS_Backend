@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['volunteer', 'donor', 'coordinator'], required: true },
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
+  responses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Response' }],
 });
-
 
 userSchema.pre('save', async function (next) {   //pre act as middleware
     if (!this.isModified("password")) {
