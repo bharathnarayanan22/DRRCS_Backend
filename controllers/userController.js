@@ -29,6 +29,29 @@ const register = async (req, res) => {
   }
 };
 
+// const login = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+//     if (!isPasswordValid) {
+//       return res.status(401).json({ message: 'Invalid credentials' });
+//     }
+
+//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+//       expiresIn: '24h'  // 3 hour expiry time
+//     });
+//     res.json({ token });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -44,13 +67,19 @@ const login = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '3h'  // 3 hour expiry time
+      expiresIn: '24h'  // 24 hour expiry time
     });
-    res.json({ token });
+
+    res.json({
+      token,
+      userId: user._id,
+      username: user.name 
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const getVolunteers = async (req, res) => {
   try {
@@ -102,11 +131,11 @@ const getVolunteersAndDonors = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
-      .populate('tasks') // Populating tasks
+      .populate('tasks') 
       .populate({
-        path: 'responses',  // Populating responses
+        path: 'responses',  
         populate: {
-          path: 'task',      // Also populating the task field inside each response
+          path: 'task',      
           model: 'Task'
         }
       });
@@ -122,4 +151,47 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getVolunteers, getDonors, getVolunteersAndDonors, getUserRole, getUserProfile };
+const userProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate('tasks') 
+      .populate('responses')
+      .populate('resources');
+      
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Calculate statistics here if needed
+    const stats = {
+      taskCount: user.tasks.length,
+      responseCount: user.responses.length,
+      resourceCount: user.resources.length,
+    };
+    
+    res.json({ user, stats });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Find the user by ID and delete
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+module.exports = { register, login, getVolunteers, getDonors, getVolunteersAndDonors, getUserRole, getUserProfile, deleteUser, userProfile };

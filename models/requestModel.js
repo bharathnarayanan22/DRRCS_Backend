@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const requestSchema = new mongoose.Schema({
   type: { type: String, required: true },
   quantity: { type: Number, required: true },
-  location: { type: String, required: true },
+  location:{
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
   status: { type: String, enum: ['pending', 'accepted', 'declined'], default: 'pending' },
   coordinator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   responses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Response' }],

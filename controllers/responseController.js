@@ -10,4 +10,16 @@ const getResponses = async (req, res) => {
   }
 };
 
-module.exports = { getResponses };
+const getMyResponses = async (req, res) => {
+  try {
+    const responses = await Response.find({ donor: req.user._id });
+    console.log(responses)
+    res.json(responses);
+  } catch (err) {
+    console.error('Error fetching responses:', err.message);
+    res.status(500).send('Server error');
+  }
+};
+
+
+module.exports = { getResponses, getMyResponses };

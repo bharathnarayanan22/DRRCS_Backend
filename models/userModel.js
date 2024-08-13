@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['volunteer', 'donor', 'coordinator'], required: true },
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Task' }],
   responses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Response' }],
+  resources: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Resource' }],
 });
 
 userSchema.pre('save', async function (next) {   //pre act as middleware
